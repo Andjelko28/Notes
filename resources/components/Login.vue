@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex justify-content-center">
-        <form @submit.prevent="loginUser" class="mb-3 w-50">
+        <form @submit.prevent="login" class="mb-3 w-50">
             <label for="email" class="form-label">Email</label>
             <input type="email" v-model="form.email" class="form-control" />
             <span v-if="formErrors.email" class="error">{{ formErrors.email[0] }}</span>
@@ -27,26 +27,23 @@ export default {
             },
             formErrors: {}
         }
-    }, methods: {
-        async loginUser() {
+    },
+    methods: {
+        async login() {
             try {
                 const response = await axios.post('/api/login', this.form);
                 console.log(response.data);
-                this.resetForm();
+                console.log('You are logged in!');
             } catch (error) {
                 if (error.response && error.response.status === 422) {
-                    this.formErrors = error.response.data.errors;
+                    this.formErrors = error.data.errors;
                 } else {
-                    console.error('Login error', error);
+                    console.error('Registration error', error);
                     alert('Logging in failed, please try again');
                 }
             }
-        },
-        resetForm() {
-            this.form.email = '';
-            this.form.password = '';
-            this.formErrors = {};
         }
     }
-};
+}
+
 </script>

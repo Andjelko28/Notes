@@ -21,7 +21,6 @@ class LoginController extends Controller
                 'password' => 'Sorry, those credentials do not match'
             ]);
         }
-        request()->session()->regenerate();
     }
 
 }
