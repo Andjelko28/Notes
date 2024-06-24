@@ -1,21 +1,27 @@
 <template>
-    <form @submit.prevent="registerUser">
-        <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" v-model="form.email" required />
-            <span v-if="formErrors.email" class="error">{{ formErrors.email[0] }}</span>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="form.password" required />
-            <span v-if="formErrors.password" class="error">{{ formErrors.password[0] }}</span>
-        </div>
-        <div>
-            <label for="password_confirmation">Confirm Password:</label>
-            <input type="password" id="password_confirmation" v-model="form.password_confirmation" required />
-        </div>
-        <button type="submit">Register</button>
-    </form>
+    <div class="d-flex justify-content-center">
+        <form @submit.prevent="registerUser" class="mb-3 w-50">
+            <div>
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" v-model="form.email" required />
+                <span v-if="formErrors.email" class="error">{{ formErrors.email[0] }}</span>
+            </div>
+            <div>
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-control" v-model="form.password" required />
+                <span v-if="formErrors.password" class="error">{{ formErrors.password[0] }}</span>
+            </div>
+            <div>
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input type="password" id="password_confirmation" class="form-control"
+                    v-model="form.password_confirmation" required />
+            </div>
+            <div class="mt-3 d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Register</button>
+                <button class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
