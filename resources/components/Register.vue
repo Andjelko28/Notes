@@ -49,6 +49,7 @@ export default {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 console.log('Registration successful', response.data);
                 this.resetForm();
+                return routes.push('/');
             } catch (error) {
                 if (error.response && error.response.status === 422) {
                     this.formErrors = error.response.data.errors;
@@ -57,7 +58,6 @@ export default {
                     alert('Registration failed. Please try again.');
                 }
             }
-            return routes.push('/');
         },
         resetForm() {
             this.form.email = '';
