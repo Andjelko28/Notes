@@ -9,7 +9,8 @@
             <li v-for="todo in todos" :key="todo.id"> {{ todo.title }}</li>
             <ul>
                 <li v-for="item in todos.items" :key="item.id">
-                    <input type="checkbox" v-model="item.completed" @change="" updateItem(item) />
+                    <input type="checkbox" v-model="item.completed" @change="updateItem(item)" />
+                    {{ item.name }}
                 </li>
             </ul>
         </ul>
@@ -40,9 +41,14 @@ export default {
             this.todos = response.data;
         },
         async addTodo() {
-            const response = await axios.post('/api/todos', { title: this.newTodo });
-            this.todos.push(response.data);
-            this.newTodo = '';
+            if (!this.newTodo) return;
+            try {
+                const response = await axios.post('/api/todos', { title: this.newTodo });
+                this.todos.push(response.data);
+                this.newTodo = '';
+            } catch (error) {
+                console.error('Error adding todo', error);
+            }
         },
         async addItem(todoId) {
             const response = await axios.post(`/api/todos/${todoId}/items`, { name: this.newItem });

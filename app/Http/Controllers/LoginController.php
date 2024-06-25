@@ -15,12 +15,12 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if (!Auth::attempt($userAttributes)) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'email' => 'Sorry, those credentials do not match',
-                'password' => 'Sorry, those credentials do not match'
-            ]);
+        if (Auth::attempt($userAttributes)) {
+            $user = Auth::user();
+            $token = $user->createToken('AuthToken')->accessToken;
+            return response()->json(['token' => $token]);
         }
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
 }

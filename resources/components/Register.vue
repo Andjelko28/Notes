@@ -26,6 +26,7 @@
 
 <script>
 import axios from 'axios';
+import routes from '../js/routes';
 
 export default {
     data() {
@@ -42,20 +43,21 @@ export default {
         async registerUser() {
             try {
                 const response = await axios.post('/api/register', this.form);
-                // Handle successful registration
-                console.log(response.data); // Assuming backend returns data on success
-                // Reset form and errors
+                console.log(response);
+                const token = response.data.token;
+                localStorage.setItem('AuthToken', token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                console.log('Registration successful', response.data);
                 this.resetForm();
             } catch (error) {
                 if (error.response && error.response.status === 422) {
-                    // Handle validation errors
                     this.formErrors = error.response.data.errors;
                 } else {
-                    // Handle other errors
                     console.error('Registration error:', error);
                     alert('Registration failed. Please try again.');
                 }
             }
+            return routes.push('/');
         },
         resetForm() {
             this.form.email = '';

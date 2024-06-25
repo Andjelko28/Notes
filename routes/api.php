@@ -11,5 +11,8 @@ use App\Http\Controllers\RegisterController;
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'register']);
 
+
 Route::resource('todos', TodoController::class);
 Route::resource('todos.items', ItemController::class);
+
+

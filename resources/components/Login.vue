@@ -17,9 +17,7 @@
 
 <script>
 import axios from 'axios';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
+import routes from '../js/routes';
 
 export default {
     data() {
@@ -35,6 +33,9 @@ export default {
         async login() {
             try {
                 const response = await axios.post('/api/login', this.form);
+                const token = response.data.token;
+                localStorage.setItem('AuthToken', token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 console.log(response.data);
                 console.log('You are logged in!');
             } catch (error) {
@@ -45,7 +46,7 @@ export default {
                     alert('Logging in failed, please try again');
                 }
             }
-            return router.push({ path: '/' });
+            return routes.push('/');
         }
     }
 }

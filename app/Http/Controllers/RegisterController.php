@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -17,8 +16,10 @@ class RegisterController extends Controller
 
         $user = User::create($userAttributes);
 
-        Auth::login($user);
-        return response()->json(['message' => 'Registration successful'], 200);
+        $token = $user->createToken('AuthToken')->accessToken;
+
+
+        return response()->json(['token' => $token], 200);
     }
 
 }
