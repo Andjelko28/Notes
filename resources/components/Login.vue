@@ -17,6 +17,9 @@
 
 <script>
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 export default {
     data() {
@@ -42,6 +45,7 @@ export default {
                     alert('Logging in failed, please try again');
                 }
             }
+            return router.push({ path: '/' });
         }
     }
 }
