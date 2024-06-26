@@ -14,9 +14,15 @@ class ItemController extends Controller
         return response()->json($item);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $todoId, $id)
     {
-        //
+        $item = Item::findOrFail($id);
+
+        $item->update([
+            'completed' => $request->input('completed')
+        ]);
+
+        return response()->json($item);
     }
 
 

@@ -36,8 +36,7 @@ export default {
                 const token = response.data.token;
                 localStorage.setItem('AuthToken', token);
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                console.log(response.data);
-                console.log('You are logged in!');
+                return routes.push('/');
             } catch (error) {
                 if (error.response && error.response.status === 422) {
                     this.formErrors = error.data.errors;
@@ -46,7 +45,6 @@ export default {
                     alert('Logging in failed, please try again');
                 }
             }
-            return routes.push('/');
         }
     }
 }
