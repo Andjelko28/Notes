@@ -8,6 +8,7 @@ use App\Http\Controllers\RegisterController;
 
 
 Route::post('/login', [LoginController::class, 'login']);
+Route::delete('/logout', [LoginController::class, 'logout']);
 Route::post('/register', [RegisterController::class, 'register']);
 
 
