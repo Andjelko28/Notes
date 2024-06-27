@@ -16,13 +16,14 @@
             <router-link to="/" class="deco-none">Notes</router-link>
             <div>
                 @auth
-                    <router-link id="logout" class="deco-none btn btn-primary">Log Out</router-link>
-                @else
+                    <router-link class="deco-none btn btn-primary">Log Out</router-link>
+                @endauth
+                @guest
                     <router-link to="/login" class="deco-none m-2 btn btn-primary">Log
                         In</router-link>
                     <router-link to="/register" class="deco-none btn btn-primary">Sign
                         Up</router-link>
-                @endauth
+                @endguest
             </div>
         </nav>
         <main>
