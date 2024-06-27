@@ -15,11 +15,11 @@
         <nav class="d-flex justify-content-between m-2 fs-1">
             <router-link to="/" class="deco-none">Notes</router-link>
             <div>
-                <router-link to="/login" v-if="!isAuthenticated" class="deco-none m-2 btn btn-primary">Log In</router-link>
-                <router-link to="/register" v-if="!isAuthenticated" class="deco-none btn btn-primary">Sign
+                <router-link to="/login" class="deco-none m-2 btn btn-primary">Log
+                    In</router-link>
+                <router-link to="/register" class="deco-none btn btn-primary">Sign
                     Up</router-link>
-                <router-link v-if="isAuthenticated" to="/" @click.native="logOut"
-                    class="deco-none btn btn-primary">Log Out</router-link>
+                    <router-link class="deco-none btn btn-primary">Log Out</router-link>
             </div>
         </nav>
         <main>

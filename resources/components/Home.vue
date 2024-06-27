@@ -28,6 +28,8 @@
 
 <script>
 import axios from 'axios';
+import routes from '../js/routes';
+import * as func from '../js/auth';
 
 export default {
     data() {
@@ -35,13 +37,23 @@ export default {
             todos: [],
             newTodo: '',
             newItem: '',
-            selectedTodo: null
-        }
+            selectedTodo: null,
+            isLog: func.default.isLoggedIn(),
+        };
     },
     methods: {
         async fetchTodos() {
             try {
-                const response = await axios.get('/api/todos');
+                const token = localStorage.getItem('AuthToken');
+                if (!token) {
+                    routes.push('/login');
+                    return;
+                }
+                const response = await axios.get(`/api/todos`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 this.todos = response.data;
 
                 const storedCompletedStates = JSON.parse(localStorage.getItem('completedStates')) || {};
@@ -58,7 +70,12 @@ export default {
         }, async addTodo() {
             if (this.newTodo) {
                 try {
-                    const response = await axios.post('/api/todos', { title: this.newTodo });
+                    const token = localStorage.getItem('AuthToken');
+                    const response = await axios.post(`/api/todos`, { title: this.newTodo }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
                     this.todos.push(response.data);
                     this.newTodo = '';
                 } catch (error) {
@@ -67,14 +84,27 @@ export default {
             }
         },
         async addItem(todoId) {
-            const response = await axios.post(`/api/todos/${todoId}/items`, { name: this.newItem });
+            const token = localStorage.getItem('AuthToken');
+            const response = await axios.post(`/api/todos/${todoId}/items`, { name: this.newItem }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             const todo = this.todos.find(todo => todo.id === todoId);
-            todo.items.push(response.data);
+            if (todo) {
+                todo.items = todo.items || [];
+                todo.items.push(response.data);
+            }
             this.newItem = '';
         },
         async updateItem(todoId, item) {
             try {
-                await axios.put(`/api/todos/${todoId}/items/${item.id}`, { completed: item.completed });
+                const token = localStorage.getItem('AuthToken');
+                await axios.put(`/api/todos/${todoId}/items/${item.id}`, { completed: item.completed }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
 
                 let storedCompletedStates = JSON.parse(localStorage.getItem('completedStates')) || {};
                 if (!storedCompletedStates[todoId]) {
@@ -88,11 +118,15 @@ export default {
         },
         selectTodo(todo) {
             this.selectedTodo = todo;
+        },
+        logoutUser() {
+            func.default.logOut();
+            this.isLoggedIn = false;
+            routes.push('/login');
         }
     },
     mounted() {
         this.fetchTodos();
     }
-
-}
+};
 </script>

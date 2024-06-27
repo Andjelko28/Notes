@@ -11,6 +11,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, \Laravel\Passport\HasApiTokens;
 
+
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
+
+
     /**
      * The attributes that are mass assignable.
      *
