@@ -29,7 +29,6 @@
 <script>
 import axios from 'axios';
 import routes from '../js/routes';
-import * as func from '../js/auth';
 
 export default {
     data() {
@@ -38,7 +37,7 @@ export default {
             newTodo: '',
             newItem: '',
             selectedTodo: null,
-            isLog: func.default.isLoggedIn(),
+            isLog: window.isAuth,
         };
     },
     methods: {
@@ -119,14 +118,30 @@ export default {
         selectTodo(todo) {
             this.selectedTodo = todo;
         },
-        logoutUser() {
-            func.default.logOut();
-            this.isLoggedIn = false;
-            routes.push('/login');
+        async logoutUser() {
+            try {
+                const token = localStorage.getItem('AuthToken');
+                await axios.post('/api/logout', {}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                localStorage.removeItem('AuthToken');
+                delete axios.defaults.headers.common['Authorization'];
+                this.isLog = false;
+                routes.push('/login');
+            } catch (error) {
+                console.error('Error logging out', error);
+            }
         }
     },
     mounted() {
         this.fetchTodos();
+
+        const logoutLink = document.querySelector('#logout');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', this.logoutUser());
+        }
     }
 };
 </script>
