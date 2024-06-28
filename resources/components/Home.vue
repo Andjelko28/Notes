@@ -8,7 +8,7 @@
         <ul class="list-group mt-4">
             <li v-for="todo in todos" :key="todo.id" class="list-group-item">
                 <div>
-                    <button @click="deleteTodo(todo)" class="btn btn-danger mb-3">Delete</button>
+                    <button @click="deleteTodo(todo.id)" class="btn btn-danger mb-3">Delete</button>
                 </div>
                 <div v-if="todo.isEditing">
                     <input type="text" v-model="todo.newTitle" class="form-control" />
