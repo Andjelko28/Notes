@@ -47,7 +47,7 @@ class TodoController extends Controller
 
     public function edit(string $id)
     {
-        //
+
     }
 
     public function update(Request $request, $id)

@@ -10,7 +10,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['todo_id', 'name', 'completed'];
+    protected $fillable = ['todo_id', 'title', 'completed'];
 
     public function todo()
     {
