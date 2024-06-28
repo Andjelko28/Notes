@@ -7,9 +7,6 @@
         </form>
         <ul class="list-group mt-4">
             <li v-for="todo in todos" :key="todo.id" class="list-group-item">
-                <div>
-                    <button @click="deleteTodo(todo.id)" class="btn btn-danger mb-3">Delete</button>
-                </div>
                 <div v-if="todo.isEditing">
                     <input type="text" v-model="todo.newTitle" class="form-control" />
                     <div class="d-flex justify-content-between m-3">
@@ -19,12 +16,33 @@
                 </div>
                 <div v-else class="d-flex justify-content-between align-items-center">
                     <span @click="selectElement(todo)">{{ todo.title }}</span>
-                    <button @click="editElement(todo)" class="btn btn-primary">Edit</button>
+                    <div>
+                        <button @click="editElement(todo)" class="btn btn-primary m-1">Edit</button>
+                        <button @click="deleteTodo(todo.id)" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
                 <ul v-if="todo.items && todo.items.length > 0" class="list-group">
                     <li v-for="item in todo.items" :key="item.id" class="list-group-item mt-2">
-                        <input type="checkbox" v-model="item.completed" @change="updateItem(todo.id, item)" />
-                        {{ item.name }}
+                        <div v-if="item.isEditing">
+                            <input type="text" v-model="item.name" class="form-control" />
+                            <div class="d-flex justify-content-between m-3">
+                                <button @click="updateItem(todo.id, item)" class="btn btn-success">Save</button>
+                                <button @click="cancelEdit(item)" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input type="checkbox" v-model="item.completed"
+                                        @change="updateItem(todo.id, item)" />
+                                    {{ item.name }}
+                                </div>
+                                <div>
+                                    <button @click="editElement(item)" class="btn btn-primary m-1">Edit</button>
+                                    <button @click="deleteItem(todo.id, item.id)" class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </li>
@@ -112,18 +130,40 @@ export default {
         async updateItem(todoId, item) {
             try {
                 const token = localStorage.getItem('AuthToken');
-                await axios.put(`/api/todos/${todoId}/items/${item.id}`, { completed: item.completed }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                let updateData = {};
 
-                let storedCompletedStates = JSON.parse(localStorage.getItem('completedStates')) || {};
-                if (!storedCompletedStates[todoId]) {
-                    storedCompletedStates[todoId] = {};
+                // Update item's name if it's edited
+                if (item.newName !== undefined) {
+                    updateData.name = item.newName;
                 }
-                storedCompletedStates[todoId][item.id] = item.completed;
-                localStorage.setItem('completedStates', JSON.stringify(storedCompletedStates));
+
+                // Update item's completion status
+                if (item.completed !== undefined) {
+                    await axios.put(`/api/todos/${todoId}/items/${item.id}`, { completed: item.completed }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
+                    let storedCompletedStates = JSON.parse(localStorage.getItem('completedStates')) || {};
+                    if (!storedCompletedStates[todoId]) {
+                        storedCompletedStates[todoId] = {};
+                    }
+                    storedCompletedStates[todoId][item.id] = item.completed;
+                    localStorage.setItem('completedStates', JSON.stringify(storedCompletedStates));
+                }
+
+                // If there are any updates to send, do it
+                if (Object.keys(updateData).length > 0) {
+                    const response = await axios.put(`/api/todos/${todoId}/items/${item.id}`, updateData, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                }
+
+                // After successful update, reset item's state
+                item.isEditing = false;
             } catch (error) {
                 console.error('Error updating item', error);
             }
@@ -181,8 +221,27 @@ export default {
             } catch (error) {
                 console.error('Error deleting todo', error);
             }
+        },
+        async deleteItem(todoId, itemId) {
+            try {
+                const token = localStorage.getItem('AuthToken');
+                await axios.delete(`/api/todos/${todoId}/items/${itemId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                this.todos = this.todos.map(todo => {
+                    if (todo.id === todoId) {
+                        todo.items = todo.items.filter(item => item.id !== itemId);
+                    }
+                    return todo;
+                });
+            } catch (error) {
+                console.error('Error deleting item:', error);
+            }
         }
     },
+
     mounted() {
         this.fetchTodos();
 
