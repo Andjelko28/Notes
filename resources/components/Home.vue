@@ -69,8 +69,9 @@ export default {
             newItem: '',
             selectedTodo: null,
             isLog: window.isAuth,
-        };
+        }
     },
+    errors: {},
     methods: {
         async fetchTodos() {
             try {

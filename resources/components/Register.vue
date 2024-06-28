@@ -15,6 +15,8 @@
                 <label for="password_confirmation" class="form-label">Confirm Password</label>
                 <input type="password" id="password_confirmation" class="form-control"
                     v-model="form.password_confirmation" required />
+                <span v-if="formErrors.password_confirmation" class="error">{{ formErrors.password_confirmation[0]
+                    }}</span>
             </div>
             <div class="mt-3 d-flex justify-content-between">
                 <button type="submit" class="btn btn-primary">Register</button>
