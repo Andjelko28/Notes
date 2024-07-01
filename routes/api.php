@@ -2,14 +2,13 @@
 
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TodoController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 
 
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth:api');
+Route::post('/logout', [LoginController::class, 'destroy']);
 Route::post('/register', [RegisterController::class, 'register']);
 
 

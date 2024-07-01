@@ -14,7 +14,6 @@
 </template>
 <script>
 import axios from "axios";
-import routes from "../js/routes";
 
 export default {
     data() {
@@ -33,9 +32,13 @@ export default {
                 });
                 localStorage.removeItem("AuthToken");
                 this.isLog = false;
-                routes.push("/login"); // Redirect to login page using Vue Router
+                this.$router.push("/login"); // Redirect to login page using Vue Router
             } catch (error) {
-                console.error("Error logging out:", error);
+                if (error.response && error.response.status === 401) {
+                    console.error("Unauthorized access. Please log in again.");
+                } else {
+                    console.error("Error logging out:", error);
+                }
             }
         },
     },

@@ -52,8 +52,9 @@ export default {
                 axios.defaults.headers.common[
                     "Authorization"
                 ] = `Bearer ${token}`;
-                this.$emit("authenticated", true);
-                return routes.push("/");
+
+                window.location = "/";
+                return this.$router.push("/");
             } catch (error) {
                 if (error.response && error.response.status === 422) {
                     this.formErrors = error.data.errors;

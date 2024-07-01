@@ -20,7 +20,8 @@ class ItemController extends Controller
         $item = Item::findOrFail($id);
 
         $item->update([
-            'completed' => $request->input('completed')
+            'completed' => $request->input('completed'),
+            'name' => $request->input('name')
         ]);
 
         return response()->json($item);
