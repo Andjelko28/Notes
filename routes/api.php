@@ -9,7 +9,7 @@ use App\Http\Controllers\RegisterController;
 
 
 Route::post('/login', [LoginController::class, 'login']);
-Route::delete('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth:api');
 Route::post('/register', [RegisterController::class, 'register']);
 
 

@@ -23,8 +23,12 @@ class LoginController extends Controller
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
-    public function destroy()
+    public function destroy(Request $request)
     {
+
+        if (Auth::check() && $request->user()->token()) {
+            $request->user()->token()->revoke();
+        }
         Auth::logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
