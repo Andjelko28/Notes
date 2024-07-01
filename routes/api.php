@@ -12,8 +12,6 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::delete('/logout', [LoginController::class, 'logout']);
 Route::post('/register', [RegisterController::class, 'register']);
 
-Route::middleware('auth:api')->get('/user', [UserController::class, 'getUser']);
-
 Route::resource('todos', TodoController::class)->middleware('auth:api');
 Route::resource('todos.items', ItemController::class)->middleware('auth:api');
 
