@@ -129,6 +129,7 @@
                             v-model="newItem"
                             placeholder="New Item"
                             class="form-control"
+                            required
                         />
                         <button type="submit" class="btn btn-primary">
                             Add

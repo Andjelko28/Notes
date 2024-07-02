@@ -1,33 +1,56 @@
 <template>
-    <div class="d-flex justify-content-center">
-        <form @submit.prevent="login" class="mb-3 w-50">
-            <label for="email" class="form-label">Email</label>
-            <input
-                type="email"
-                id="email"
-                v-model="form.email"
-                class="form-control"
-                required
-            />
-            <span v-if="formErrors.email" class="error">{{
-                formErrors.email[0]
-            }}</span>
-            <label for="password" class="form-label">Password</label>
-            <input
-                type="password"
-                id="password"
-                class="form-control"
-                v-model="form.password"
-                required
-            />
-            <span v-if="formErrors.password" class="error">{{
-                formErrors.password[0]
-            }}</span>
-            <div class="mt-3 d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Log in</button>
-                <button class="btn btn-secondary">Cancel</button>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <form @submit.prevent="login" class="mb-3">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            v-model="form.email"
+                            class="form-control"
+                            required
+                        />
+                        <span v-if="formErrors.email" class="error">{{
+                            formErrors.email[0]
+                        }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"
+                            >Password</label
+                        >
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control"
+                            v-model="form.password"
+                            required
+                        />
+                    </div>
+                    <span v-if="formErrors.password" class="error">{{
+                        formErrors.password[0]
+                    }}</span>
+                    <div v-if="loginError" class="alert alert-danger mt-3">
+                        {{ loginError }}
+                    </div>
+
+                    <div class="text-center m-3">
+                        <a href="/register" class="deco-none"
+                            >You don't have an account? Sign Up.</a
+                        >
+                    </div>
+                    <div class="mt-3 d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">
+                            Log in
+                        </button>
+                        <button class="btn btn-secondary" @click="cancel">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </template>
 
@@ -42,6 +65,7 @@ export default {
                 password: "",
             },
             formErrors: {},
+            loginError: "",
         };
     },
     methods: {
@@ -58,11 +82,17 @@ export default {
                 return this.$router.push("/");
             } catch (error) {
                 if (error.response && error.response.status === 422) {
-                    this.formErrors = error.data.errors;
+                    this.loginError = "Your email or password are incorrect!";
                 } else {
-                    this.formErrors = "Logging in failed, please try again";
+                    this.loginError = "Logging in failed, please try again!";
                 }
             }
+        },
+        cancel() {
+            this.form.email = "";
+            this.form.password = "";
+            this.formErrors = "";
+            this.loginError = "";
         },
     },
 };

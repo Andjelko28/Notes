@@ -10,17 +10,19 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $userAttributes = $request->validate([
+        $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($userAttributes)) {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('AuthToken')->accessToken;
             return response()->json(['token' => $token]);
         }
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => ['email' => 'These credentials do not match our records']], 422);
     }
 
     public function destroy(Request $request)

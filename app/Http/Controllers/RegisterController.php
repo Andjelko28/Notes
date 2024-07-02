@@ -9,10 +9,16 @@ class RegisterController extends Controller
 {
     public function register(Request $request)
     {
-        $userAttributes = $request->validate([
-            'email' => 'required',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        $userAttributes = $request->validate(
+            [
+                'email' => 'required',
+                'password' => 'required|confirmed|min:6',
+            ],
+            [
+                'password.min' => 'The password must be at least 6 characters.',
+                'password.confirmed' => 'The password confirmation does not match.',
+            ]
+        );
         $user = User::create($userAttributes);
 
         if (!$user) {

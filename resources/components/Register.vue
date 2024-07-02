@@ -1,52 +1,54 @@
 <template>
-    <div class="d-flex justify-content-center">
-        <form @submit.prevent="registerUser" class="mb-3 w-50">
-            <div>
-                <label for="email" class="form-label">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    class="form-control"
-                    v-model="form.email"
-                    required
-                />
-                <span v-if="formErrors.email" class="error">
-                    {{ formErrors.email }}</span
-                >
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <form @submit.prevent="registerUser" class="mb-3">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-control"
+                            v-model="form.email"
+                            required
+                        />
+                        <span v-if="formErrors.email" class="alert alert-danger mt-2">
+                            {{ formErrors.email }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control"
+                            v-model="form.password"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            class="form-control"
+                            v-model="form.password_confirmation"
+                            required
+                        />
+                    </div>
+                    <div v-if="formErrors.password" class="alert alert-danger my-3">
+                        {{ formErrors.password[0] }}
+                    </div>
+                    <div class="text-center m-3">
+                        <a href="/login" class="deco-none">Already have an account? Log In.</a>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="button" @click="cancel" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
             </div>
-            <div>
-                <label for="password" class="form-label">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    class="form-control"
-                    v-model="form.password"
-                    required
-                />
-                <span v-if="formErrors.password" class="error">{{
-                    formErrors.password[0]
-                }}</span>
-            </div>
-            <div>
-                <label for="password_confirmation" class="form-label"
-                    >Confirm Password</label
-                >
-                <input
-                    type="password"
-                    id="password_confirmation"
-                    class="form-control"
-                    v-model="form.password_confirmation"
-                    required
-                />
-                <span v-if="formErrors.password_confirmation" class="error">{{
-                    formErrors.password_confirmation[0]
-                }}</span>
-            </div>
-            <div class="mt-3 d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Register</button>
-                <button class="btn btn-secondary">Cancel</button>
-            </div>
-        </form>
+        </div>
     </div>
 </template>
 
@@ -81,11 +83,16 @@ export default {
                 this.resetForm();
                 return routes.push("/");
             } catch (error) {
-                if (error.response && error.response.status === 422) {
-                    this.formErrors = error.response.data.errors;
+                if (error.response) {
+                    if (error.response.status === 422) {
+                        this.formErrors = error.response.data.errors;
+                    } else {
+                        this.registerError =
+                            "Registration failed, please try again.";
+                    }
                 } else {
-                    console.error("Registration error:", error);
-                    alert("Registration failed. Please try again.");
+                    this.registerError =
+                        "Registration failed, please try again.";
                 }
             }
         },
