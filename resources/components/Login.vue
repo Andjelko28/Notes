@@ -7,6 +7,7 @@
                 id="email"
                 v-model="form.email"
                 class="form-control"
+                required
             />
             <span v-if="formErrors.email" class="error">{{
                 formErrors.email[0]
@@ -17,6 +18,7 @@
                 id="password"
                 class="form-control"
                 v-model="form.password"
+                required
             />
             <span v-if="formErrors.password" class="error">{{
                 formErrors.password[0]
@@ -31,7 +33,6 @@
 
 <script>
 import axios from "axios";
-import routes from "../js/routes";
 
 export default {
     data() {
@@ -59,8 +60,7 @@ export default {
                 if (error.response && error.response.status === 422) {
                     this.formErrors = error.data.errors;
                 } else {
-                    console.error("Registration error", error);
-                    console.error("Logging in failed, please try again");
+                    this.formErrors = "Logging in failed, please try again";
                 }
             }
         },

@@ -7,6 +7,7 @@
                     v-model="newTodo"
                     placeholder="New Todo"
                     class="form-control"
+                    required
                 />
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>

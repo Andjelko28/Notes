@@ -62,9 +62,7 @@ export default {
                 password: "",
                 password_confirmation: "",
             },
-            formErrors: {
-                email: "You need to type @ into your email!",
-            },
+            formErrors: {},
         };
     },
     methods: {
