@@ -28,9 +28,11 @@
                             required
                         />
                     </div>
-                    <span v-if="formErrors.password" class="error">{{
-                        formErrors.password[0]
-                    }}</span>
+                    <div class="mb-3">
+                        <span v-if="formErrors.password" class="error">{{
+                            formErrors.password[0]
+                        }}</span>
+                    </div>
                     <div v-if="loginError" class="alert alert-danger mt-3">
                         {{ loginError }}
                     </div>
@@ -91,7 +93,7 @@ export default {
         cancel() {
             this.form.email = "";
             this.form.password = "";
-            this.formErrors = "";
+            this.formErrors = {};
             this.loginError = "";
         },
     },
